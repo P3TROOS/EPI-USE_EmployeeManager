@@ -3,15 +3,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styling/login.css';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const[email,setEmail]=useState("")
+    const[password,setPassword]=useState("")
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        // Perform login authentication here
-        console.log('Username:', username);
-        console.log('Password:', password);
-        // You can add your authentication logic here
+        // Storing user login details for request
+        const credentials = {
+            email: email,
+            password: password,
+        };
+        try {
+            // Backend api login call with user details
+            const response = await fetch('http://localhost:8080/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+            });
+            if (response.ok) {
+                // If login successful, redirect to homepage
+                response.json().then((data) => {
+                    const { access_token } = data;
+                    sessionStorage.setItem("accessToken", access_token);
+                    console.log("Login successful");
+                    window.location.href = "/home";
+                });
+            } else {
+                // If login unsuccessful, alert user
+                console.log('Login unsuccessful');
+                window.alert("Incorrect Login Details");
+            }
+        } catch (error) {
+            // Handle error
+            console.error('Error occurred:', error);
+        }
     };
 
     return (
@@ -23,18 +50,18 @@ const Login = () => {
                             <h3 className="card-title text-center">Login</h3>
                             <form onSubmit={handleLogin}>
                                 <div className="form-group">
-                                    <label htmlFor="username">Username</label>
+                                    <label htmlFor="username">User Email</label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         id="username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         required
                                     />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="password">Password</label>
+                                    <label htmlFor="password">User Password</label>
                                     <input
                                         type="password"
                                         className="form-control"
