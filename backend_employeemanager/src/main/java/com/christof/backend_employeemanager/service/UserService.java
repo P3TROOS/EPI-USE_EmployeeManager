@@ -5,8 +5,10 @@ import com.christof.backend_employeemanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,12 +27,23 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    public User getUser(int employeeNumber) {
+    public User getUserById(int employeeNumber) {
         Optional<User> user = userRepo.findById(employeeNumber);
         if (user.isPresent()) {
             return user.get();
         }
-        throw new RuntimeException("Employee with mployee number " + employeeNumber + " not found");
+        throw new RuntimeException("Employee with employee number " + employeeNumber + " not found");
+    }
+
+    public User getUserByEmail(String email) {
+//        User user = userRepo.findByEmail(email)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+        Optional<User> user = userRepo.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new RuntimeException("Employee with email " + email + " not found");
     }
 
     public void deleteUser(int employeeNumber) {

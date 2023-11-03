@@ -23,7 +23,7 @@ public class UserController {
 
     @GetMapping("/getUser/{employeeNumber}")
     public User getUserByEmployeeNumber(@PathVariable int employeeNumber) {
-        return userService.getUser(employeeNumber);
+        return userService.getUserById(employeeNumber);
     }
 
     @PostMapping("/add")
