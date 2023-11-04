@@ -6,20 +6,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository userRepo;
 
     @Override
-    public User saveStudent(User user) {
-        return userRepository.save(user);
+    public List<User> getAllUsers() {
+        return userRepo.findAll();
     }
 
     @Override
-    public List<User> getAllStudents() {
-        return userRepository.findAll();
+    public User addUser(User user) {
+        return userRepo.save(user);
+    }
+
+    @Override
+    public User getUserById(int employeeNumber) {
+        Optional<User> user = userRepo.findById(employeeNumber);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new RuntimeException("Employee with employee number " + employeeNumber + " not found");
+    }
+
+    @Override
+    public void deleteUser(int employeeNumber) {
+        userRepo.deleteById(employeeNumber);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return userRepo.save(user);
     }
 }
