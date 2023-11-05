@@ -2,16 +2,14 @@ package com.christof.backend_employeemanager.controller;
 
 import com.christof.backend_employeemanager.model.User;
 import com.christof.backend_employeemanager.service.UserService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user")
-@RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/user")
+@CrossOrigin
 public class UserController {
     @Autowired
     private UserService userService;
