@@ -1,31 +1,67 @@
 // Home.js
-import React, { useState } from 'react';
-import LoginPage from "./login";
+import React, { useState, useEffect } from 'react';
+import LoginPage from './login';
+import CreateEmployee from './createEmployee';
 
 const Home = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [users, setUsers] = useState([
-        { id: 1, name: 'User 1' },
-        { id: 2, name: 'User 2' },
-        // Add more users as needed
-    ]);
+    const [users, setUsers] = useState([]);
+    const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return localStorage.getItem('isLoggedIn') === 'true';
+    });
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
+    useEffect(() => {
+        // Fetch users from the API endpoint when the component mounts
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = () => {
+        // Fetch all users from database via api endpoint
+        fetch('http://localhost:8080/api/user/getAll')
+            .then(response => response.json())
+            .then(data => {
+                setUsers(data);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error fetching user data:', error);
+            });
     };
 
-    const handleDelete = (userId) => {
-        setUsers(users.filter(user => user.id !== userId));
+    const handleDelete = (employeeNumber) => {
+        // Delete user from database via api endpoint
+        const deleteUser = {employeeNumber}
+        fetch(`http://localhost:8080/api/user/delete/` + employeeNumber, {
+            method: 'POST',
+            body: JSON.stringify(deleteUser),
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Refresh user list
+                    fetchUsers();
+                } else {
+                    throw new Error('Failed to delete');
+                }
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error deleting user:', error);
+            });
     };
 
     const handleEdit = (userId) => {
-        // Implement edit functionality
+        // Implement the edit functionality
         console.log(`Editing user with ID ${userId}`);
     };
 
     const handleCreateUser = () => {
-        // Implement create user functionality
+        setIsCreateUserOpen(true);
         console.log('Creating a new user');
+    };
+
+    const handleLogout = () => {
+        localStorage.setItem('isLoggedIn', 'false');
+        setIsLoggedIn(false);
     };
 
     return (
@@ -39,10 +75,14 @@ const Home = () => {
                     <ul className="list-group">
                         {users.map(user => (
                             <li key={user.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                {user.name}
+                                {user.employeeNumber} : {user.name} {user.surname}
                                 <div>
-                                    <button className="btn btn-sm btn-danger me-2" onClick={() => handleDelete(user.id)}>Delete</button>
-                                    <button className="btn btn-sm btn-secondary" onClick={() => handleEdit(user.id)}>Edit</button>
+                                    <button className="btn btn-sm btn-danger me-2" onClick={() => handleDelete(user.employeeNumber)}>
+                                        Delete
+                                    </button>
+                                    <button className="btn btn-sm btn-secondary" onClick={() => handleEdit(user.employeeNumber)}>
+                                        Edit
+                                    </button>
                                 </div>
                             </li>
                         ))}
@@ -50,6 +90,7 @@ const Home = () => {
                     <button className="btn btn-primary mt-3" onClick={handleCreateUser}>
                         Create User
                     </button>
+                    {isCreateUserOpen && <CreateEmployee closeModal={() => setIsCreateUserOpen(false)} refreshUsers={fetchUsers} />}
                 </div>
             ) : (
                 <LoginPage setIsLoggedIn={setIsLoggedIn} />

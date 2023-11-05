@@ -24,6 +24,11 @@ public class UserController {
         return userService.getUserById(employeeNumber);
     }
 
+    @GetMapping("/getManagers")
+    public List<User> getManagers() {
+        return userService.getAllManagers();
+    }
+
     @PostMapping("/add")
     public User addUser(@RequestBody User user) {
         return userService.addUser(user);
@@ -35,8 +40,9 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteUser(@RequestParam int employeeNumber) {
+    @PostMapping("/delete/{employeeNumber}")
+    public void deleteUser(@PathVariable int employeeNumber) {
+        System.out.println(employeeNumber);
         userService.deleteUser(employeeNumber);
     }
 }

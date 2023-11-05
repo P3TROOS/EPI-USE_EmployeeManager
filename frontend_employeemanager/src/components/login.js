@@ -1,5 +1,6 @@
 // Login.js
 import React, { useState } from 'react';
+import '../styling/login.css';
 
 const LoginPage = ({ setIsLoggedIn }) => {
     const [email, setEmail] = useState('');
@@ -25,29 +26,27 @@ const LoginPage = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <div className="text-center">
+        <div className="login-container">
             <h2>Login</h2>
-            <div className="mb-3">
-                <label htmlFor="email" className="form-label">Email</label>
+            <div className="form-group">
+                <label htmlFor="email">Email</label>
                 <input
                     type="email"
-                    className="form-control"
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
             </div>
-            <div className="mb-3">
-                <label htmlFor="password" className="form-label">Password</label>
+            <div className="form-group">
+                <label htmlFor="password">Password</label>
                 <input
                     type="password"
-                    className="form-control"
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-            <button className="btn btn-primary" onClick={handleLogin}>
+            <button className="btn-login" onClick={handleLogin}>
                 Login
             </button>
         </div>

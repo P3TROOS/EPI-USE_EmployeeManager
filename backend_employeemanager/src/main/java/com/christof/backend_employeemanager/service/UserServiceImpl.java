@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllManagers() {
+        return userRepo.findManagers();
+    }
+
+    @Override
     public void deleteUser(int employeeNumber) {
         userRepo.deleteById(employeeNumber);
     }
