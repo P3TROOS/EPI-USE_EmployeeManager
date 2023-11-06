@@ -12,8 +12,4 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u FROM User u WHERE u.role = 'Manager' or u.role = 'CEO'")
     List<User> findManagers();
-
-//    @Modifying
-//    @Query("DELETE FROM User u WHERE u.employeeNumber = :employeeNumber")
-//    void deleteByEmployeeNumber(@Param("employeeNumber") int employeeNumber);
 }
