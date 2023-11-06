@@ -10,6 +10,8 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     const [selectedRole, setSelectedRole] = useState(employee.role);
     const [roles] = useState(['Manager', 'Employee', 'CEO']); // Predefined roles
     const [selectedManager, setSelectedManager] = useState(employee.manager);
+    const [email, setEmail] = useState(employee.email);
+    const [password, setPassword] = useState(employee.password);
     const [managers, setManagers] = useState([]);
 
     useEffect(() => {
@@ -36,7 +38,9 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                     birthdate,
                     salary,
                     role: selectedRole,
-                    manager: manager
+                    manager: manager,
+                    email,
+                    password
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,6 +107,14 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                             </select>
                         </div>
                     )}
+                    <div className="form-group">
+                        <label>Email :</label>
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Password :</label>
+                        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={closeModal}>

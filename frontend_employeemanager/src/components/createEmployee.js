@@ -4,7 +4,6 @@ import { Modal, Button } from 'react-bootstrap';
 import '../styling/createEmployee.css'
 
 const CreateEmployee = ({ closeModal, refreshUsers }) => {
-    const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [birthdate, setBirthdate] = useState('');
@@ -18,13 +17,9 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     const [managers, setManagers] = useState([]);
     const [ceoExists, setCeoExists] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     useEffect(() => {
         fetchManagers();
         findCeo();
-        setShow(true);
     }, []);
 
     const fetchManagers = () => {
@@ -85,80 +80,78 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     <Modal.Title>Create New User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <form className="form">
+                    <div className="form-group">
+                        <label>Name :</label>
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Surname :</label>
+                        <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Birthdate :</label>
+                        <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Salary :</label>
+                        <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} />
+                    </div>
+                    {ceoExists === true ? (
                         <div className="form-group">
-                            <label>Name :</label>
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                            <label>Surname :</label>
-                            <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                            <label>Birthdate :</label>
-                            <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
-                        </div>
-                        <div className="form-group">
-                            <label>Salary :</label>
-                            <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} />
-                        </div>
-                        {ceoExists === true ? (
-                            <div className="form-group">
-                                <label>Role :</label>
-                                <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
-                                    <option value="">Select a role</option>
-                                    {rolesWithCeo.map((role, index) => (
-                                        // If CEO does not exist, show all roles
-                                        <option key={index} value={role}>
-                                            {role}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        ) : (
-                            <div className="form-group">
-                                <label>Role :</label>
-                                <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
-                                    <option value="">Select a role</option>
-                                    {roles.map((role, index) => (
-                                        // If CEO exists, show all roles except CEO
-                                        <option key={index} value={role}>
-                                            {role}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        )}
-                        <div className="form-group">
-                            <label>Reporting Manager :</label>
-                            <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)}>
-                                <option value="">Select a manager</option>
-                                {selectedRole === 'Manager' ? (
-                                    // Display CEOs only when 'Manager' role is selected
-                                    managers.filter(manager => manager.role === 'CEO').map(manager => (
-                                        <option key={manager.employeeNumber} value={manager.employeeNumber}>
-                                            {manager.name} {manager.surname}
-                                        </option>
-                                    ))
-                                ) : (
-                                    // Display all managers
-                                    managers.map(manager => (
-                                        <option key={manager.employeeNumber} value={manager.employeeNumber}>
-                                            {manager.name} {manager.surname}
-                                        </option>
-                                    ))
-                                )}
+                            <label>Role :</label>
+                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                                <option value="">Select a role</option>
+                                {rolesWithCeo.map((role, index) => (
+                                    // If CEO does not exist, show all roles
+                                    <option key={index} value={role}>
+                                        {role}
+                                    </option>
+                                ))}
                             </select>
                         </div>
+                    ) : (
                         <div className="form-group">
-                            <label>Email :</label>
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <label>Role :</label>
+                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                                <option value="">Select a role</option>
+                                {roles.map((role, index) => (
+                                    // If CEO exists, show all roles except CEO
+                                    <option key={index} value={role}>
+                                        {role}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                        <div className="form-group">
-                            <label>Password :</label>
-                            <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        </div>
-                    </form>
+                    )}
+                    <div className="form-group">
+                        <label>Reporting Manager :</label>
+                        <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)}>
+                            <option value="">Select a manager</option>
+                            {selectedRole === 'Manager' ? (
+                                // Display CEOs only when 'Manager' role is selected
+                                managers.filter(manager => manager.role === 'CEO').map(manager => (
+                                    <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                        {manager.name} {manager.surname}
+                                    </option>
+                                ))
+                            ) : (
+                                // Display all managers
+                                managers.map(manager => (
+                                    <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                        {manager.name} {manager.surname}
+                                    </option>
+                                ))
+                            )}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Email :</label>
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Password :</label>
+                        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={closeModal}>
