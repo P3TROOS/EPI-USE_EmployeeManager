@@ -9,8 +9,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     const [birthDate, setBirthDate] = useState('');
     const [salary, setSalary] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
-    const [rolesWithCeo] = useState(['Manager', 'Employee', 'CEO']);
-    const [roles] = useState(['Manager', 'Employee']);
+    const [roles] = useState(['Manager', 'Employee', 'Chief']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [selectedManager, setSelectedManager] = useState('');
@@ -19,7 +18,6 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
 
     useEffect(() => {
         fetchManagers();
-        findCeo();
     }, []);
 
     const fetchManagers = () => {
@@ -29,16 +27,6 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
           .then(data => setManagers(data))
           .catch(error => console.error('Error fetching managers:', error));
     };
-
-    const findCeo = () => {
-        managers.forEach(manager => {
-            if (manager.role === 'CEO') {
-                setCeoExists(true);
-            } else {
-                setCeoExists(false);
-            }
-        })
-    }
 
     const handleSubmit = async () => {
         if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
@@ -106,51 +94,39 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                         <label>Salary :</label>
                         <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} required />
                     </div>
-                    {ceoExists === false ? (
-                        <div className="form-group">
-                            <label>Role :</label>
-                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
-                                <option value="">Select a role</option>
-                                {rolesWithCeo.map((role, index) => (
-                                    // If CEO does not exist, show all roles
-                                    <option key={index} value={role}>
-                                        {role}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    ) : (
-                        <div className="form-group">
-                            <label>Role :</label>
-                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
-                                <option value="">Select a role</option>
-                                {roles.map((role, index) => (
-                                    // If CEO exists, show all roles except CEO
-                                    <option key={index} value={role}>
-                                        {role}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                    <div className="form-group">
+                        <label>Role :</label>
+                        <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
+                            <option value="">Select a role</option>
+                            {roles.map((role, index) => (
+                                <option key={index} value={role}>
+                                    {role}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className="form-group">
                         <label>Reporting Manager :</label>
                         <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)} required>
                             <option value="">Select a manager</option>
                             {selectedRole === 'Manager' ? (
-                                // Display CEOs only when 'Manager' role is selected
-                                managers.filter(manager => manager.role === 'CEO').map(manager => (
+                                // Display only 'Chiefs' when 'Manager' role is selected
+                                managers.filter(manager => manager.role === 'Chief').map(manager => (
                                     <option key={manager.employeeNumber} value={manager.employeeNumber}>
                                         {manager.name} {manager.surname}
                                     </option>
                                 ))
                             ) : (
-                                // Display all managers
-                                managers.map(manager => (
-                                    <option key={manager.employeeNumber} value={manager.employeeNumber}>
-                                        {manager.name} {manager.surname}
-                                    </option>
-                                ))
+                                selectedRole === 'Chief' ? (
+                                    // Show 'None' only when 'Chief' role is selected
+                                    <option value="none">None</option>
+                                ) : (
+                                    managers.map(manager => (
+                                        <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                            {manager.name} {manager.surname}
+                                        </option>
+                                    ))
+                                )
                             )}
                         </select>
                     </div>

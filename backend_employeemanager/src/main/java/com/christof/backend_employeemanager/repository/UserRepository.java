@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
-    @Query("SELECT u FROM User u WHERE u.role = 'Manager' or u.role = 'CEO'")
+    @Query("SELECT u FROM User u WHERE u.role = 'Manager' or u.role = 'Chief'")
     List<User> findManagers();
 }

@@ -167,7 +167,7 @@ const Home = () => {
                     <br/>
                     <ul className="tree">
                         {users.map(user => {
-                            if (user.role === 'CEO') {
+                            if (user.role === 'Chief') {
                                 return (
                                     <li key={user.employeeNumber}>
                                         |-----> {user.role} : {user.name} {user.surname}
