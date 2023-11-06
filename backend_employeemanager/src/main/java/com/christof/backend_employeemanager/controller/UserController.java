@@ -4,13 +4,13 @@ import com.christof.backend_employeemanager.model.User;
 import com.christof.backend_employeemanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
 @CrossOrigin
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -24,6 +24,11 @@ public class UserController {
         return userService.getUserById(employeeNumber);
     }
 
+    @GetMapping("/getManagers")
+    public List<User> getManagers() {
+        return userService.getAllManagers();
+    }
+
     @PostMapping("/add")
     public User addUser(@RequestBody User user) {
         return userService.addUser(user);
@@ -35,8 +40,9 @@ public class UserController {
         return userService.updateUser(user);
     }
 
-    @DeleteMapping("/delete")
-    public void deleteUser(@RequestParam int employeeNumber) {
+    @PostMapping("/delete/{employeeNumber}")
+    public void deleteUser(@PathVariable int employeeNumber) {
+        System.out.println(employeeNumber);
         userService.deleteUser(employeeNumber);
     }
 }

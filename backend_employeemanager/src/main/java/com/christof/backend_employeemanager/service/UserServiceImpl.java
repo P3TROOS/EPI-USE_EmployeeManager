@@ -4,7 +4,6 @@ import com.christof.backend_employeemanager.model.User;
 import com.christof.backend_employeemanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +30,11 @@ public class UserServiceImpl implements UserService {
             return user.get();
         }
         throw new RuntimeException("Employee with employee number " + employeeNumber + " not found");
+    }
+
+    @Override
+    public List<User> getAllManagers() {
+        return userRepo.findManagers();
     }
 
     @Override

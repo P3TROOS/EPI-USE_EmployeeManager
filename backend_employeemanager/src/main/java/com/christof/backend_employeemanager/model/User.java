@@ -2,13 +2,6 @@ package com.christof.backend_employeemanager.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-
 @Entity
 @Table(name="users")
 public class User {
@@ -19,7 +12,7 @@ public class User {
     private String password;
     private String name;
     private String surname;
-    private Date birthDate;
+    private String birthDate;
     private double salary;
     private String role;
     private String manager;
@@ -64,11 +57,11 @@ public class User {
         this.surname = surname;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 

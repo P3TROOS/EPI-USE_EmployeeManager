@@ -1,187 +1,157 @@
-import React, {useEffect, useState} from 'react';
-import '../../styling/CreateUserPopup.css';
+// CreateUser.js
+import React, { useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import '../styling/createEmployee.css'
 
-export const CreateEmployee = ({popupOpen, popupClose, onUserAdded}) => {
+const CreateEmployee = ({ closeModal, refreshUsers }) => {
+    // Variable declarations
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [birthDate, setBirthDate] = useState('');
-    const [employeeNumber, setEmployeeNumber] = useState('');
     const [salary, setSalary] = useState('');
-    const [selectedRole, setSelectedRole] = useState('Select Role');
-    const [managerNames, setManagerNames] = useState('')
-    const [selectedManager, setSelectedManager] = useState('Select Manager');
+    const [selectedRole, setSelectedRole] = useState('');
+    const [roles] = useState(['Manager', 'Employee', 'Chief']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const emailRegex = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
-    const [errMsg, setErrMsg] = useState("");
+    const [selectedManager, setSelectedManager] = useState('');
+    const [managers, setManagers] = useState([]);
+    const [ceoExists, setCeoExists] = useState(false);
 
-    const handleRoleSelect = (role) => {
-        // Update state with the selected role
-        setSelectedRole(role);
+    useEffect(() => {
+        // Fetch users from the API endpoint when the component mounts
+        fetchManagers();
+    }, []);
+
+    const fetchManagers = () => {
+        // Fetch managers from API endpoint for users with manager role
+        fetch('http://localhost:8080/api/user/getManagers')
+          .then(response => response.json())
+          .then(data => setManagers(data))
+          .catch(error => console.error('Error fetching managers:', error));
     };
 
-    const useHandleClick = (e) => {
-        e.preventDefault();
-        if (document.getElementById("nameInput").value === '' || document.getElementById("surnameInput").value === '' || document.getElementById("emailInput").value === '' || selectedRole === '') {
-            setErrMsg("Please ensure that all fields are completed.");
-            return;
-        } else if (!emailRegex.test(email)) {
-            setErrMsg("Invalid email format");
+    // Function to handle the submission for adding a new user. This sends the new data to the API endpoint
+    const handleSubmit = async () => {
+        if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
+            // If any required field is empty, prevent form submission
+            alert('Please fill in all required fields.');
             return;
         }
-        popupClose();
-        const user = {name, surname, email, password, role: {role_name: selectedRole}};
-        console.log(user);
-        fetch("http://localhost:8080/api/user/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + sessionStorage.getItem('accessToken'),
-            },
-            body: JSON.stringify(user),
-        }).then((response) => {
+        const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
+        const date = new Date(birthDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const formattedBirthdate = `${year}-${month}-${day}`;
+        console.log(formattedBirthdate);
+        try {
+            const response = await fetch('http://localhost:8080/api/user/add', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name,
+                    surname,
+                    birthDate: formattedBirthdate,
+                    salary,
+                    role: selectedRole,
+                    manager: manager,
+                    email,
+                    password
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             if (response.ok) {
-                console.log("New User added");
-                onUserAdded();
+                const data = await response.json();
+                console.log('User created:', data);
+                closeModal();
+                refreshUsers();
+            } else {
+                throw new Error('Failed to create user');
             }
-        }).catch((error) => {
-            console.error("Error adding new user:", error);
-        });
+        } catch (error) {
+            console.error('Error creating user:', error);
+        }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("http://localhost:8080/api/randPass/generate", {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: "Bearer " + sessionStorage.getItem('accessToken')
-                    }
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    const randomP = data.password.toString();
-                    setPassword(randomP);
-                } else {
-                    console.error('Error fetching string from the server.');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        };
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        fetch("http://localhost:8080/api/user/getManagerNames", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + sessionStorage.getItem('accessToken')
-            },
-        }).then((res) => res.json())
-            .then((result) => {
-                setManagerNames(result);
-            });
-    }, []);
-
     return (
-        <Modal show={popupOpen} onHide={popupClose} centered>
-            <Modal.Header closeButton>
-                <Modal.Title>Create User</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <form>
+        <div>
+            <Modal show={true} onHide={closeModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Create New User</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <div className="form-group">
-                        <label>Name</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
+                        <label>Name :</label>
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
                     </div>
                     <div className="form-group">
-                        <label>Surname</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={surnameame}
-                            onChange={(e) => setSurname(e.target.value)}
-                            required
-                        />
+                        <label>Surname :</label>
+                        <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} required />
                     </div>
                     <div className="form-group">
-                        <label>Birth Day</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={birthDate}
-                            onChange={(e) => setBirthDate(e.target.value)}
-                            required
-                        />
+                        <label>Birthdate :</label>
+                        <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
                     </div>
                     <div className="form-group">
-                        <label>Employee Number</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={employeeNumber}
-                            onChange={(e) => setEmployeeNumber(e.target.value)}
-                            required
-                        />
+                        <label>Salary :</label>
+                        <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} required />
                     </div>
                     <div className="form-group">
-                        <label>Salary</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={salary}
-                            onChange={(e) => setSalary(e.target.value)}
-                            required
-                        />
+                        <label>Role :</label>
+                        <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
+                            <option value="">Select a role</option>
+                            {roles.map((role, index) => (
+                                <option key={index} value={role}>
+                                    {role}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                    <p className="createUserRoleLabel">User Role</p>
-                    <Dropdown>
-                        <Dropdown.Toggle variant="primary" id="roleDropdown">
-                            Select Role
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={() => handleRoleSelect('Admin')}>Admin</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleRoleSelect('Manager')}>Manager</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleRoleSelect('Employee')}>Employee</Dropdown.Item>
-                            <Dropdown.Item onClick={() => handleRoleSelect('Customer')}>CEO</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <p className="createUserRoleLabel">Reporting Line Manager</p>
-                    {managerNames && managerNames.length > 0 ? (
-                        <Dropdown>
-                            <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                Select Reporting Line Manager
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                {managerNames.map((managerName) => (
-                                    <Dropdown.Item
-                                        key={managerName}
-                                        onClick={() => setSelectedRole(managerName)}
-                                    >
-                                        {managerName}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                    ) : (
-                        <p className="createUserLoadTitle">Loading...</p>
-                    )}
-                    <p className="createUserError">{errMsg}</p>
-                    <button className="btn btn-primary" onClick={useHandleClick}>
-                        Submit
-                    </button>
-                </form>
-            </Modal.Body>
-        </Modal>
+                    <div className="form-group">
+                        <label>Reporting Manager :</label>
+                        <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)} required>
+                            <option value="">Select a manager</option>
+                            {selectedRole === 'Manager' ? (
+                                // Display only 'Chiefs' when 'Manager' role is selected
+                                managers.filter(manager => manager.role === 'Chief').map(manager => (
+                                    <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                        {manager.name} {manager.surname}
+                                    </option>
+                                ))
+                            ) : (
+                                selectedRole === 'Chief' ? (
+                                    // Show 'None' only when 'Chief' role is selected
+                                    <option value="none">None</option>
+                                ) : (
+                                    managers.map(manager => (
+                                        <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                            {manager.name} {manager.surname}
+                                        </option>
+                                    ))
+                                )
+                            )}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Email :</label>
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                    </div>
+                    <div className="form-group">
+                        <label>Password :</label>
+                        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleSubmit}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
     );
 };
 
