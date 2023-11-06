@@ -123,7 +123,7 @@ const Home = () => {
                             style={{ width: '300px' }}
                         />
                     </div>
-                    <p className="search-bar">Roles: 'CEO', 'Manager', 'Employee'</p>
+                    <p className="search-bar">Roles: 'Chief', 'Manager', 'Employee'</p>
                     <h2>User List</h2>
                     <ul className="list-group">
                         {filteredUsers.map((user) => (

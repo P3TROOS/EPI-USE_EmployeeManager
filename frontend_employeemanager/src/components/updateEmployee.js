@@ -8,7 +8,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     const [birthDate, setBirthDate] = useState(employee.birthDate);
     const [salary, setSalary] = useState(employee.salary);
     const [selectedRole, setSelectedRole] = useState(employee.role);
-    const [roles] = useState(['Manager', 'Employee', 'CEO']);
+    const [roles] = useState(['Manager', 'Employee', 'Chief']);
     const [selectedManager, setSelectedManager] = useState(employee.manager);
     const [email, setEmail] = useState(employee.email);
     const [password, setPassword] = useState(employee.password);
@@ -108,11 +108,29 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                             <label>Reporting Manager :</label>
                             <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)}>
                                 <option value="">Select a manager</option>
-                                {filterUserFromManagers().map(manager => (
-                                    <option key={manager.employeeNumber} value={manager.employeeNumber}>
-                                        {manager.name} {manager.surname}
-                                    </option>
-                                ))}
+                                {selectedRole === 'Manager' ? (
+                                    // Display only 'Chiefs' when 'Manager' role is selected
+                                    managers
+                                        .filter(manager => manager.role === 'Chief' && manager.employeeNumber !== employee.employeeNumber)
+                                        .map(manager => (
+                                            <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                                {manager.name} {manager.surname}
+                                            </option>
+                                        ))
+                                ) : (
+                                    selectedRole === 'Chief' ? (
+                                        // Show 'None' only when 'Chief' role is selected
+                                        <option value="none">None</option>
+                                    ) : (
+                                        filterUserFromManagers()
+                                            .filter(manager => manager.employeeNumber !== employee.employeeNumber)
+                                            .map(manager => (
+                                                <option key={manager.employeeNumber} value={manager.employeeNumber}>
+                                                    {manager.name} {manager.surname}
+                                                </option>
+                                            ))
+                                    )
+                                )}
                             </select>
                         </div>
                     )}
