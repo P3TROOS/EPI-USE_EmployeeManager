@@ -36,7 +36,7 @@ jobs:
         with:
           java-version: '20'
           distribution: 'temurin'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml 1
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
       - name: Kill current process on backend port
