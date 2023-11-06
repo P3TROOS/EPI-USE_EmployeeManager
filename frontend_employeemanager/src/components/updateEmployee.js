@@ -64,6 +64,10 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
         }
     };
 
+    const filterUserFromManagers = () => {
+        return managers.filter(manager => manager.employeeNumber !== employee.employeeNumber);
+    };
+
     return (
         <div>
             <Modal show={true} onHide={closeModal}>
@@ -72,23 +76,23 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div className="form-group">
-                        <label>Name</label>
+                        <label>Name :</label>
                         <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
                     </div>
                     <div className="form-group">
-                        <label>Surname</label>
+                        <label>Surname :</label>
                         <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} />
                     </div>
                     <div className="form-group">
-                        <label>Birthdate</label>
+                        <label>Birthdate :</label>
                         <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
                     </div>
                     <div className="form-group">
-                        <label>Salary</label>
+                        <label>Salary :</label>
                         <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} />
                     </div>
                     <div className="form-group">
-                        <label>Role</label>
+                        <label>Role :</label>
                         <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
                             <option value="">Select a role</option>
                             {roles.map((role, index) => (
@@ -100,10 +104,10 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                     </div>
                     {selectedRole !== 'CEO' && (
                         <div className="form-group">
-                            <label>Reporting Manager</label>
+                            <label>Reporting Manager :</label>
                             <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)}>
                                 <option value="">Select a manager</option>
-                                {managers.map(manager => (
+                                {filterUserFromManagers().map(manager => (
                                     <option key={manager.employeeNumber} value={manager.employeeNumber}>
                                         {manager.name} {manager.surname}
                                     </option>

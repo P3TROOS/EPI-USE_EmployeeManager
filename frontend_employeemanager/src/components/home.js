@@ -8,6 +8,7 @@ import '../styling/home.css';
 import UserProfile from './userProfile';
 
 const Home = () => {
+    // Variable declarations
     const [users, setUsers] = useState([]);
     const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -24,12 +25,14 @@ const Home = () => {
         fetchUsers();
     }, []);
 
+    // Fetch all users from database via api endpoint
     const fetchUsers = () => {
-        // Fetch all users from database via api endpoint
         fetch('http://localhost:8080/api/user/getAll')
             .then(response => response.json())
             .then(data => {
-                setUsers(data)
+                // Filter out the 'admin' user from the fetched data
+                const filteredUsers = data.filter(user => user.role !== 'Admin');
+                setUsers(filteredUsers);
             })
             .catch(error => {
                 // Handle error
@@ -37,8 +40,8 @@ const Home = () => {
             });
     };
 
+    // Delete user from database via api endpoint
     const handleDelete = (employeeNumber) => {
-        // Delete user from database via api endpoint
         const deleteUser = {employeeNumber}
         fetch('http://localhost:8080/api/user/delete/' + employeeNumber, {
             method: 'POST',
@@ -83,6 +86,7 @@ const Home = () => {
         console.log('Creating a new user');
     };
 
+    // Function to handle the user logout and session management
     const handleLogout = () => {
         localStorage.setItem('isLoggedIn', 'false');
         setIsLoggedIn(false);

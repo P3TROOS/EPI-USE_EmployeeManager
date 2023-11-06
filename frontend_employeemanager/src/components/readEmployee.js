@@ -16,23 +16,24 @@ const ReadEmployee = ({ employee, closeModal }) => {
 
     useEffect(() => {
         fetchManagers();
-        getManager();
     }, []);
 
     const fetchManagers = () => {
         // Fetch managers from API endpoint for users with manager role
         fetch('http://localhost:8080/api/user/getManagers')
             .then(response => response.json())
-            .then(data => setManagers(data))
+            .then(data => {
+                setManagers(data);
+                getManager(data);
+            })
             .catch(error => console.error('Error fetching managers:', error));
     };
 
-    const getManager = () => {
-      managers.forEach(manager => {
-          if (manager.employeeNumber.toString() === employee.manager) {
-              setSelectedManager(manager.name + ' ' + manager.surname);
-          }
-      })
+    const getManager = (managersData) => {
+        const foundManager = managersData.find(manager => manager.employeeNumber.toString() === employee.manager);
+        if (foundManager) {
+            setSelectedManager(foundManager.name + ' ' + foundManager.surname);
+        }
     };
 
     return (
