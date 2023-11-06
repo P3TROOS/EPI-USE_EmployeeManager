@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import '../styling/login.css';
 
-const LoginPage = ({ setIsLoggedIn }) => {
+const LoginPage = ({ setIsLoggedIn, setLoggedInUserEmail }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -14,6 +14,7 @@ const LoginPage = ({ setIsLoggedIn }) => {
                 // Check if the email and password match any user in the received data
                 const foundUser = data.find(user => user.email === email && user.password === password);
                 if (foundUser) {
+                    setLoggedInUserEmail(email);
                     setIsLoggedIn(true);
                 } else {
                     alert('Invalid email or password');

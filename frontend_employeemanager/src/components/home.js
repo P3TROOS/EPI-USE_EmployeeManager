@@ -3,15 +3,18 @@ import React, { useState, useEffect } from 'react';
 import LoginPage from './login';
 import CreateEmployee from './createEmployee';
 import UpdateEmployee from "./updateEmployee";
+import ReadEmployee from "./readEmployee";
 import '../styling/home.css';
-import * as d3 from 'd3';
+import UserProfile from './userProfile';
 
 const Home = () => {
     const [users, setUsers] = useState([]);
     const [isCreateUserOpen, setIsCreateUserOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [isUpdateUserOpen, setIsUpdateUserOpen] = useState(false);
+    const [isViewUserOpen, setIsViewUserOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [loggedInUserEmail, setLoggedInUserEmail] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
         return localStorage.getItem('isLoggedIn') === 'true';
     });
@@ -55,6 +58,16 @@ const Home = () => {
             });
     };
 
+    const handleViewUser = (user) => {
+        setSelectedUser(user);
+        setIsViewUserOpen(true);
+    };
+
+    const handleCloseViewModal = () => {
+        setSelectedUser(null);
+        setIsViewUserOpen(false);
+    };
+
     const handleEditUser = (user) => {
         setSelectedUser(user);
         setIsUpdateUserOpen(true);
@@ -82,149 +95,31 @@ const Home = () => {
 
     // Filter users based on the search term
     const filteredUsers = users.filter((user) => {
-        // Filter by name or surname based on the search term
         return (
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.surname.toLowerCase().includes(searchTerm.toLowerCase())
+            user.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.role.toLowerCase().includes(searchTerm.toLowerCase())
         );
     });
-
-    const drawGraph = () => {
-        fetch('http://localhost:8080/api/user/getAll') // Replace with your actual API endpoint
-            .then(response => response.json())
-            .then(data => {
-                const userMap = {};
-
-                data.forEach(user => {
-                    userMap[user.employeeNumber.toString()] = user;
-                });
-
-                let hierarchyData;
-                data.forEach(user => {
-                    if (user.role === 'CEO') {
-                        hierarchyData = { name: `${user.name}`, children: [] };
-                    }
-                })
-                //let managerData = userMap;
-                let level1 = {};
-                let level2;
-                let level3;
-
-                // Find CEO, Level 1
-                data.forEach(user => {
-                    // const manager = user.manager;
-                    // const ceo = user.role;
-                    // const name = user.name;
-                    // if (ceo === 'CEO' || name === 'Admin') {
-                    //     managerData = userMap[manager];
-                    //     if (managerData) {
-                    //         if (!managerData.children) {
-                    //             managerData.children = [];
-                    //         }
-                    //         managerData.children.push({ name: user.name });
-                    //         console.log(managerData);
-                    //     }
-                    // } else {
-                    //     hierarchyData.children.push({ name: user.name });
-                    // }
-                    if (user.role === 'CEO' || user.name === 'Admin') {
-                        level1.push(user);
-                    } else {
-                        console.log("No CEO");
-                    }
-                });
-
-                // Find CEO as manager, Level 2
-                data.forEach(user => {
-                    if (parseInt(user.manager) === level1[0].employeeNumber) {
-                        level1.children.push(user);
-                    }
-                });
-                console.log(level1)
-
-                const width = 900;
-                const height = 600;
-
-                const svg = d3.select('#org-chart').append('svg')
-                    .attr('width', width)
-                    .attr('height', height)
-                    .append('g')
-                    .attr('transform', 'translate(20,20)');
-
-                const treeLayout = d3.tree().size([width - 40, height - 40]);
-
-                const root = d3.hierarchy(level1);
-                const treeData = treeLayout(root);
-
-                const linkGenerator = d3.linkVertical()
-                    .x(d => d.x)
-                    .y(d => d.y);
-
-                svg.selectAll('.link')
-                    .data(treeData.links())
-                    .enter()
-                    .append('path')
-                    .attr('class', 'link')
-                    .attr('d', d => linkGenerator(d));
-
-                const nodesGroup = svg.selectAll('.node')
-                    .data(treeData.descendants())
-                    .enter()
-                    .append('g')
-                    .attr('class', 'node')
-                    .attr('transform', d => `translate(${d.x},${d.y})`);
-
-                nodesGroup.append('circle')
-                    .attr('r', 5);
-
-                nodesGroup.append('text')
-                    .attr('dy', '0.31em')
-                    .style('text-anchor', 'middle')
-                    .text(d => d.data.name);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-            });
-    };
-
-    // Function to recursively generate the tree structure
-    // const generateTree = (managerId, level) => {
-    //     const subordinates = users.filter(user => user.manager === managerId);
-    //
-    //     if (subordinates.length === 0) {
-    //         return null;
-    //     }
-    //
-    //     return (
-    //         <ul>
-    //             {subordinates.map(subordinate => (
-    //                 <li key={subordinate.employeeNumber}>
-    //                     {subordinate.name} ({subordinate.role})
-    //                     {generateTree(subordinate.employeeNumber, level + 1)}
-    //                 </li>
-    //             ))}
-    //         </ul>
-    //     );
-    // };
-    //
-    // const ceos = users.filter(user => user.role === "CEO");
 
     return (
         <div className="container mt-4">
             {isLoggedIn ? (
                 <div>
-                    <button className="btn btn-danger mb-3" onClick={handleLogout}>
+                    <button className="btn btn-dark mb-3" onClick={handleLogout}>
                         Logout
                     </button>
-                    <div className="search-bar"> {/* Added a CSS class to style the search bar */}
+                    <UserProfile userEmail={loggedInUserEmail} />
+                    <div className="search-bar">
                         <input
                             type="text"
-                            placeholder="Search by name or surname"
+                            placeholder="Search by name, surname or role"
                             value={searchTerm}
                             onChange={handleSearch}
-                            style={{ width: '300px' }} // Adjust the width of the search bar
+                            style={{ width: '300px' }}
                         />
                     </div>
+                    <p className="search-bar">Roles: 'CEO', 'Manager', 'Employee'</p>
                     <h2>User List</h2>
                     <ul className="list-group">
                         {filteredUsers.map((user) => (
@@ -234,8 +129,11 @@ const Home = () => {
                                     <button className="btn btn-sm btn-danger me-2" onClick={() => handleDelete(user.employeeNumber)}>
                                         Delete
                                     </button>
-                                    <button className="btn btn-sm btn-secondary" onClick={() => handleEditUser(user)}>
+                                    <button className="btn btn-sm btn-secondary me-2" onClick={() => handleEditUser(user)}>
                                         Edit
+                                    </button>
+                                    <button className="btn btn-sm btn-success" onClick={() => handleViewUser(user)}>
+                                        View
                                     </button>
                                 </div>
                             </li>
@@ -249,6 +147,13 @@ const Home = () => {
                         <UpdateEmployee
                             employee={selectedUser}
                             closeModal={handleCloseEditModal}
+                            refreshUsers={fetchUsers}
+                        />
+                    )}
+                    {isViewUserOpen && selectedUser && (
+                        <ReadEmployee
+                            employee={selectedUser}
+                            closeModal={handleCloseViewModal}
                             refreshUsers={fetchUsers}
                         />
                     )}
@@ -294,7 +199,7 @@ const Home = () => {
                     </ul>
                 </div>
             ) : (
-                <LoginPage setIsLoggedIn={setIsLoggedIn} />
+                <LoginPage setIsLoggedIn={setIsLoggedIn} setLoggedInUserEmail={setLoggedInUserEmail} />
             )}
         </div>
     );

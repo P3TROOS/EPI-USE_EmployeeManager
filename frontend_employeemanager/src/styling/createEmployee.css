@@ -1,11 +1,11 @@
 .form {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adjust this value to set the desired spacing between elements */
+    gap: 10px;
 }
 
 .form-group {
-    margin-bottom: 10px; /* Adjust this value to set the desired spacing between labels and inputs */
+    margin-bottom: 10px;
 }
 
 label {

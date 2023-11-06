@@ -8,7 +8,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     const [birthdate, setBirthdate] = useState(employee.birthdate);
     const [salary, setSalary] = useState(employee.salary);
     const [selectedRole, setSelectedRole] = useState(employee.role);
-    const [roles] = useState(['Manager', 'Employee', 'CEO']); // Predefined roles
+    const [roles] = useState(['Manager', 'Employee', 'CEO']);
     const [selectedManager, setSelectedManager] = useState(employee.manager);
     const [email, setEmail] = useState(employee.email);
     const [password, setPassword] = useState(employee.password);
@@ -27,8 +27,12 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     };
 
     const handleSubmit = async () => {
+        if (!name || !surname || !birthdate || !salary || !selectedRole || !selectedManager || !email || !password) {
+            // If any required field is empty, prevent form submission
+            alert('Please fill in all required fields.');
+            return;
+        }
         const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
-
         try {
             const response = await fetch('http://localhost:8080/api/user/update/' + employee.employeeNumber, {
                 method: 'PUT',

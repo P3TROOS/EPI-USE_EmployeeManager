@@ -4,7 +4,6 @@ import com.christof.backend_employeemanager.model.User;
 import com.christof.backend_employeemanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 

@@ -41,6 +41,11 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     }
 
     const handleSubmit = async () => {
+        if (!name || !surname || !birthdate || !salary || !selectedRole || !selectedManager || !email || !password) {
+            // If any required field is empty, prevent form submission
+            alert('Please fill in all required fields.');
+            return;
+        }
         const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
         try {
             const response = await fetch('http://localhost:8080/api/user/add', {
@@ -82,24 +87,24 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                 <Modal.Body>
                     <div className="form-group">
                         <label>Name :</label>
-                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Surname :</label>
-                        <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} />
+                        <input type="text" value={surname} onChange={(e) => setSurname(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Birthdate :</label>
-                        <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
+                        <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Salary :</label>
-                        <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} />
+                        <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} required />
                     </div>
                     {ceoExists === true ? (
                         <div className="form-group">
                             <label>Role :</label>
-                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
                                 <option value="">Select a role</option>
                                 {rolesWithCeo.map((role, index) => (
                                     // If CEO does not exist, show all roles
@@ -112,7 +117,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     ) : (
                         <div className="form-group">
                             <label>Role :</label>
-                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                            <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>
                                 <option value="">Select a role</option>
                                 {roles.map((role, index) => (
                                     // If CEO exists, show all roles except CEO
@@ -125,7 +130,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     )}
                     <div className="form-group">
                         <label>Reporting Manager :</label>
-                        <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)}>
+                        <select value={selectedManager} onChange={(e) => setSelectedManager(e.target.value)} required>
                             <option value="">Select a manager</option>
                             {selectedRole === 'Manager' ? (
                                 // Display CEOs only when 'Manager' role is selected
@@ -146,11 +151,11 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     </div>
                     <div className="form-group">
                         <label>Email :</label>
-                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Password :</label>
-                        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} required />
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
