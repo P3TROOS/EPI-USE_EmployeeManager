@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import '../styling/readEmployee.css'
 
 const ReadEmployee = ({ employee, closeModal }) => {
+    // Variable declarations
     const [managers, setManagers] = useState([]);
     const [name] = useState(employee.name);
     const [surname] = useState(employee.surname);
@@ -15,6 +16,7 @@ const ReadEmployee = ({ employee, closeModal }) => {
     const [password] = useState(employee.password);
 
     useEffect(() => {
+        // Fetch users from the API endpoint when the component mounts
         fetchManagers();
     }, []);
 
@@ -29,6 +31,7 @@ const ReadEmployee = ({ employee, closeModal }) => {
             .catch(error => console.error('Error fetching managers:', error));
     };
 
+    // Function that gets the name of the associated manager for the user
     const getManager = (managersData) => {
         const foundManager = managersData.find(manager => manager.employeeNumber.toString() === employee.manager);
         if (foundManager) {

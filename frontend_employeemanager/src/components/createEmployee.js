@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import '../styling/createEmployee.css'
 
 const CreateEmployee = ({ closeModal, refreshUsers }) => {
+    // Variable declarations
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [birthDate, setBirthDate] = useState('');
@@ -17,6 +18,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     const [ceoExists, setCeoExists] = useState(false);
 
     useEffect(() => {
+        // Fetch users from the API endpoint when the component mounts
         fetchManagers();
     }, []);
 
@@ -28,6 +30,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
           .catch(error => console.error('Error fetching managers:', error));
     };
 
+    // Function to handle the submission for adding a new user. This sends the new data to the API endpoint
     const handleSubmit = async () => {
         if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
             // If any required field is empty, prevent form submission

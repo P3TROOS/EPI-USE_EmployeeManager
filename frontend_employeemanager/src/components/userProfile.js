@@ -31,7 +31,6 @@ const UserProfile = ({ userEmail }) => {
                 if (user.email === userEmail) {
                     return (
                         <h5>User : {user.name} {user.surname}</h5>
-                        // <h4>User Surname: {user.surname}</h4>
                     );
                 }
             })}

@@ -1,8 +1,10 @@
 // UpdateEmployee.js
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import '../styling/updateEmployee.css';
 
 const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
+    // Variable declarations
     const [name, setName] = useState(employee.name);
     const [surname, setSurname] = useState(employee.surname);
     const [birthDate, setBirthDate] = useState(employee.birthDate);
@@ -15,6 +17,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     const [managers, setManagers] = useState([]);
 
     useEffect(() => {
+        // Fetch users from the API endpoint when the component mounts
         fetchManagers();
     }, []);
 
@@ -26,6 +29,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
             .catch(error => console.error('Error fetching managers:', error));
     };
 
+    // Function to handle the submission for updating a user. This sends the modified data to the API endpoint
     const handleSubmit = async () => {
         if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
             // If any required field is empty, prevent form submission
@@ -51,7 +55,6 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                     'Content-Type': 'application/json'
                 }
             });
-
             if (response.ok) {
                 const data = await response.json();
                 console.log('User edited:', data);

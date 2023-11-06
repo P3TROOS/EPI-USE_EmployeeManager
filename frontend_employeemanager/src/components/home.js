@@ -61,6 +61,7 @@ const Home = () => {
             });
     };
 
+    // Function to handles the viewing of users
     const handleViewUser = (user) => {
         setSelectedUser(user);
         setIsViewUserOpen(true);
@@ -71,6 +72,7 @@ const Home = () => {
         setIsViewUserOpen(false);
     };
 
+    // Function to handles the user edits
     const handleEditUser = (user) => {
         setSelectedUser(user);
         setIsUpdateUserOpen(true);
@@ -81,6 +83,7 @@ const Home = () => {
         setIsUpdateUserOpen(false);
     };
 
+    // Function to handles the user creation
     const handleCreateUser = () => {
         setIsCreateUserOpen(true);
         console.log('Creating a new user');
