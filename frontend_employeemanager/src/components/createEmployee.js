@@ -6,7 +6,7 @@ import '../styling/createEmployee.css'
 const CreateEmployee = ({ closeModal, refreshUsers }) => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [birthdate, setBirthdate] = useState('');
+    const [birthDate, setBirthDate] = useState('');
     const [salary, setSalary] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
     const [rolesWithCeo] = useState(['Manager', 'Employee', 'CEO']);
@@ -41,19 +41,25 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     }
 
     const handleSubmit = async () => {
-        if (!name || !surname || !birthdate || !salary || !selectedRole || !selectedManager || !email || !password) {
+        if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
             // If any required field is empty, prevent form submission
             alert('Please fill in all required fields.');
             return;
         }
         const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
+        const date = new Date(birthDate);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const formattedBirthdate = `${year}-${month}-${day}`;
+        console.log(formattedBirthdate);
         try {
             const response = await fetch('http://localhost:8080/api/user/add', {
                 method: 'POST',
                 body: JSON.stringify({
                     name,
                     surname,
-                    birthdate,
+                    birthDate: formattedBirthdate,
                     salary,
                     role: selectedRole,
                     manager: manager,
@@ -64,7 +70,6 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     'Content-Type': 'application/json'
                 }
             });
-
             if (response.ok) {
                 const data = await response.json();
                 console.log('User created:', data);
@@ -95,13 +100,13 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
                     </div>
                     <div className="form-group">
                         <label>Birthdate :</label>
-                        <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} required />
+                        <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} required />
                     </div>
                     <div className="form-group">
                         <label>Salary :</label>
                         <input type="number" value={salary} onChange={(e) => setSalary(e.target.value)} required />
                     </div>
-                    {ceoExists === true ? (
+                    {ceoExists === false ? (
                         <div className="form-group">
                             <label>Role :</label>
                             <select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)} required>

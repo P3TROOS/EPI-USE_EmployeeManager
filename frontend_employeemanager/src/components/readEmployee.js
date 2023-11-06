@@ -7,7 +7,7 @@ const ReadEmployee = ({ employee, closeModal }) => {
     const [managers, setManagers] = useState([]);
     const [name] = useState(employee.name);
     const [surname] = useState(employee.surname);
-    const [birthdate] = useState(employee.birthdate);
+    const [birthDate] = useState(employee.birthDate);
     const [salary] = useState(employee.salary);
     const [selectedRole] = useState(employee.role);
     const [selectedManager, setSelectedManager] = useState('');
@@ -53,7 +53,7 @@ const ReadEmployee = ({ employee, closeModal }) => {
                     </div>
                     <div className="form-group">
                         <label>Birthdate :</label>
-                        <input type="text" value={birthdate} readOnly={true} />
+                        <input type="text" value={birthDate} readOnly={true} />
                     </div>
                     <div className="form-group">
                         <label>Salary :</label>

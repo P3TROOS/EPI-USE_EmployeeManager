@@ -5,7 +5,7 @@ import { Modal, Button } from 'react-bootstrap';
 const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     const [name, setName] = useState(employee.name);
     const [surname, setSurname] = useState(employee.surname);
-    const [birthdate, setBirthdate] = useState(employee.birthdate);
+    const [birthDate, setBirthDate] = useState(employee.birthDate);
     const [salary, setSalary] = useState(employee.salary);
     const [selectedRole, setSelectedRole] = useState(employee.role);
     const [roles] = useState(['Manager', 'Employee', 'CEO']);
@@ -27,19 +27,20 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
     };
 
     const handleSubmit = async () => {
-        if (!name || !surname || !birthdate || !salary || !selectedRole || !selectedManager || !email || !password) {
+        if (!name || !surname || !birthDate || !salary || !selectedRole || !selectedManager || !email || !password) {
             // If any required field is empty, prevent form submission
             alert('Please fill in all required fields.');
             return;
         }
         const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
+        const formattedBirthdate = new Date(birthDate).toISOString().split('T')[0];
         try {
             const response = await fetch('http://localhost:8080/api/user/update/' + employee.employeeNumber, {
                 method: 'PUT',
                 body: JSON.stringify({
                     name,
                     surname,
-                    birthdate,
+                    birthDate: formattedBirthdate,
                     salary,
                     role: selectedRole,
                     manager: manager,
@@ -85,7 +86,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
                     </div>
                     <div className="form-group">
                         <label>Birthdate :</label>
-                        <input type="date" value={birthdate} onChange={(e) => setBirthdate(e.target.value)} />
+                        <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
                     </div>
                     <div className="form-group">
                         <label>Salary :</label>
