@@ -1,7 +1,7 @@
 name: Deploy to EC2
 on:
   push:
-    branches: [dev]
+    branches: [deployment]
   release:
     types: [created]
 
@@ -21,29 +21,29 @@ jobs:
         with:
           node-version: 18.17.1
 
-      - name: Install frontend dependencies
-        run: npm install
-        working-directory: frontend_employeemanager
-
-      - name: Build frontend
-        run: npm run build
-        working-directory: frontend_employeemanager
-        env:
-          CI: false
-
-      - name: Set up JDK 20
-        uses: actions/setup-java@v3
-        with:
-          java-version: '20'
-          distribution: 'temurin'
-          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-          settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-      - name: Kill current process on backend port
-        run: sudo kill -9 $(sudo lsof -t -i:8080) &
-
-      - name: Build backend
-        run: mvn -B package --file backend_employeemanager/pom.xml
-
-      - name: Execute backend
-        run: sudo java -jar /home/ubuntu/actions-runner/_work/InfoSafe/InfoSafe/backend/infosafe_backend/target/infosafe_backend-0.0.1-SNAPSHOT.jar &
+#      - name: Install frontend dependencies
+#        run: npm install
+#        working-directory: frontend_employeemanager
+#
+#      - name: Build frontend
+#        run: npm run build
+#        working-directory: frontend_employeemanager
+#        env:
+#          CI: false
+#
+#      - name: Set up JDK 20
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: '20'
+#          distribution: 'temurin'
+#          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+#          settings-path: ${{ github.workspace }} # location for the settings.xml file
+#
+#      - name: Kill current process on backend port
+#        run: sudo kill -9 $(sudo lsof -t -i:8080) &
+#
+#      - name: Build backend
+#        run: mvn -B package --file backend_employeemanager/pom.xml
+#
+#      - name: Execute backend
+#        run: sudo java -jar /home/ubuntu/actions-runner/_work/InfoSafe/InfoSafe/backend/infosafe_backend/target/infosafe_backend-0.0.1-SNAPSHOT.jar &
