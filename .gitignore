@@ -32,7 +32,7 @@ node_modules
 /coverage
 
 # production
-/build
+/frontend_employeemanager/build
 
 # misc
 .DS_Store

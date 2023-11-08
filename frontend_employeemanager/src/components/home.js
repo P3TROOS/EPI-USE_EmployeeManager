@@ -27,7 +27,7 @@ const Home = () => {
 
     // Fetch all users from database via api endpoint
     const fetchUsers = () => {
-        fetch('http://localhost:8080/api/user/getAll')
+        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/getAll')
             .then(response => response.json())
             .then(data => {
                 // Filter out the 'admin' user from the fetched data
@@ -43,7 +43,7 @@ const Home = () => {
     // Delete user from database via api endpoint
     const handleDelete = (employeeNumber) => {
         const deleteUser = {employeeNumber}
-        fetch('http://localhost:8080/api/user/delete/' + employeeNumber, {
+        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/delete/' + employeeNumber, {
             method: 'POST',
             body: JSON.stringify(deleteUser),
         })
