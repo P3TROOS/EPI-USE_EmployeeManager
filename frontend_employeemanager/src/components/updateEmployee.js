@@ -23,7 +23,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
 
     const fetchManagers = () => {
         // Fetch managers from API endpoint for users with manager role
-        fetch('http://localhost:8080/api/user/getManagers')
+        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/getManagers')
             .then(response => response.json())
             .then(data => setManagers(data))
             .catch(error => console.error('Error fetching managers:', error));
@@ -39,7 +39,7 @@ const UpdateEmployee = ({ employee, closeModal, refreshUsers }) => {
         const manager = selectedRole === 'CEO' ? 'none' : selectedManager;
         const formattedBirthdate = new Date(birthDate).toISOString().split('T')[0];
         try {
-            const response = await fetch('http://localhost:8080/api/user/update/' + employee.employeeNumber, {
+            const response = await fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/update/' + employee.employeeNumber, {
                 method: 'PUT',
                 body: JSON.stringify({
                     name,

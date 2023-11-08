@@ -8,7 +8,7 @@ const LoginPage = ({ setIsLoggedIn, setLoggedInUserEmail }) => {
 
     const handleLogin = () => {
         // Simulating a GET request to fetch user data from an API
-        fetch('http://localhost:8080/api/user/getAll')
+        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/getAll')
             .then(response => response.json())
             .then(data => {
                 // Check if the email and password match any user in the received data
