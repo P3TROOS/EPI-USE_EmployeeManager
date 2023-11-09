@@ -1,0 +1,51 @@
+@startuml
+
+skinparam component {
+    BackgroundColor<<presentation>> LightBlue
+    BorderColor<<presentation>> #000000
+    FontColor<<presentation>> #000000
+    BackgroundColor<<frontend>> LightGreen
+    BorderColor<<frontend>> #000000
+    FontColor<<frontend>> #000000
+    BackgroundColor<<backend>> LightYellow
+    BorderColor<<backend>> #000000
+    FontColor<<backend>> #000000
+    BackgroundColor<<database>> LightCyan
+    BorderColor<<database>> #000000
+    FontColor<<database>> #000000
+    BackgroundColor<<cloud>> LightGray
+    BorderColor<<cloud>> #000000
+    FontColor<<cloud>> #000000
+    BackgroundColor<<github>> LightPink
+    BorderColor<<github>> #000000
+    FontColor<<github>> #000000
+}
+
+node "User Browser" as userBrowser <<presentation>> {
+}
+
+node "Employee Manager" as project <<cloud>> {
+    [React Frontend] <<frontend>>
+    [SpringBoot Backend] <<backend>>
+    [MySQL Database] <<database>>
+}
+
+node "Cloud Service" as cloudService <<cloud>> {
+    [EC2] <<cloud>>
+    [RDS] <<cloud>>
+}
+
+database "GitHub" as github <<github>> {
+    [GitHub Actions] <<github>>
+}
+
+userBrowser - [React Frontend]
+project - [React Frontend]
+project - [SpringBoot Backend]
+project - [MySQL Database]
+project - cloudService
+cloudService - [EC2]
+cloudService - [RDS]
+github - [GitHub Actions]
+
+@enduml

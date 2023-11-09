@@ -27,7 +27,7 @@ const Home = () => {
 
     // Fetch all users from database via api endpoint
     const fetchUsers = () => {
-        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/getAll')
+        fetch('http://localhost:8080/api/user/getAll')
             .then(response => response.json())
             .then(data => {
                 // Filter out the 'admin' user from the fetched data
@@ -43,7 +43,7 @@ const Home = () => {
     // Delete user from database via api endpoint
     const handleDelete = (employeeNumber) => {
         const deleteUser = {employeeNumber}
-        fetch('http://ec2-16-171-54-80.eu-north-1.compute.amazonaws.com:8080/api/user/delete/' + employeeNumber, {
+        fetch('http://localhost:8080/api/user/delete/' + employeeNumber, {
             method: 'POST',
             body: JSON.stringify(deleteUser),
         })
@@ -105,6 +105,8 @@ const Home = () => {
         return (
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.surname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.birthDate.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.salary <= parseInt(searchTerm) ||
             user.role.toLowerCase().includes(searchTerm.toLowerCase())
         );
     });
@@ -120,13 +122,14 @@ const Home = () => {
                     <div className="search-bar">
                         <input
                             type="text"
-                            placeholder="Search by name, surname or role"
+                            placeholder="Sort by name, surname, role, birthdate or maximum salary"
                             value={searchTerm}
                             onChange={handleSearch}
-                            style={{ width: '300px' }}
+                            style={{ width: '500px' }}
                         />
                     </div>
                     <p className="search-bar">Roles: 'Chief', 'Manager', 'Employee'</p>
+                    <p className="search-bar">Birthdate: 'YYYY-MM-DD'</p>
                     <h2>User List</h2>
                     <ul className="list-group">
                         {filteredUsers.map((user) => (
