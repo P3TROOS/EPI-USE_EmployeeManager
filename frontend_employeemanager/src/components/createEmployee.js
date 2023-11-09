@@ -15,7 +15,6 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
     const [password, setPassword] = useState('');
     const [selectedManager, setSelectedManager] = useState('');
     const [managers, setManagers] = useState([]);
-    const [ceoExists, setCeoExists] = useState(false);
 
     useEffect(() => {
         // Fetch users from the API endpoint when the component mounts
