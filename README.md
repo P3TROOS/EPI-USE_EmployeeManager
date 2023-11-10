@@ -22,12 +22,12 @@ The Employee Manager System is an innovative solution that streamlines the proce
 - :globe_with_meridians: <a href="http://ec2-51-20-60-63.eu-north-1.compute.amazonaws.com/" target="_blank">Go to Website</a>
 
 ### Demo Video:
-- :video_camera: All our demo videos and system advert can be found [here](link).
+- :video_camera: The Demo Video for the system can be found [here](https://github.com/P3TROOS/EPI-USE_EmployeeManager/blob/dev/documentation/EmployeeManager_Demo.mkv).
 
 ### User Manual:
-- :closed_book: The User Manual can be found [here](https://github.com/P3TROOS/EPI-USE_EmployeeManager/tree/dev/documentation/EmployeeManager-UserManual).
+- :closed_book: The User Manual can be found [here](https://github.com/P3TROOS/EPI-USE_EmployeeManager/tree/dev/documentation/EmployeeManager-UserManual.pdf).
 
 ### Technical Document:
-- :bookmark_tabs: The Technical Document can be found [here](https://github.com/P3TROOS/EPI-USE_EmployeeManager/tree/dev/documentation/EmployeeManager-TechnicalSocument).
+- :bookmark_tabs: The Technical Document can be found [here](https://github.com/P3TROOS/EPI-USE_EmployeeManager/tree/dev/documentation/EmployeeManager-TechnicalDocument.pdf).
 
 <hr>
