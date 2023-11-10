@@ -1,0 +1,18 @@
+.form-group {
+    margin-bottom: 10px;
+}
+
+label {
+    display: inline-block;
+    width: 150px;
+}
+
+input {
+    margin: 12px;
+    width: 200px;
+}
+
+select {
+    margin: 12px;
+    width: 200px;
+}

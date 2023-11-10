@@ -1,0 +1,49 @@
+name: Deploy to EC2
+on:
+  push:
+    branches: [dev]
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.17.1
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: frontend_employeemanager
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend_employeemanager
+        env:
+          CI: false
+
+      - name: Set up JDK 20
+        uses: actions/setup-java@v3
+        with:
+          java-version: '20'
+          distribution: 'temurin'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml 1
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Kill current process on backend port
+        run: sudo kill -9 $(sudo lsof -t -i:8080) &
+
+      - name: Build backend
+        run: mvn -B package --file backend_employeemanager/pom.xml
+
+      - name: Execute backend
+        run: sudo java -jar /home/ubuntu/actions-runner/_work/EPI-USE_EmployeeManager/EPI-USE_EmployeeManager/backend_employeemanager/target/backend_employeemanager-0.0.1-SNAPSHOT.jar &
