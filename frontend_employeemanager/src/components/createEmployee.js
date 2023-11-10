@@ -24,7 +24,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
 
     const fetchManagers = () => {
         // Fetch managers from API endpoint for users with manager role
-        fetch('http://localhost:8080/api/user/getManagers')
+        fetch('http://ec2-51-20-60-63.eu-north-1.compute.amazonaws.com:8080/api/user/getManagers')
           .then(response => response.json())
           .then(data => setManagers(data))
           .catch(error => console.error('Error fetching managers:', error));
@@ -45,7 +45,7 @@ const CreateEmployee = ({ closeModal, refreshUsers }) => {
         const formattedBirthdate = `${year}-${month}-${day}`;
         console.log(formattedBirthdate);
         try {
-            const response = await fetch('http://localhost:8080/api/user/add', {
+            const response = await fetch('http://ec2-51-20-60-63.eu-north-1.compute.amazonaws.com:8080/api/user/add', {
                 method: 'POST',
                 body: JSON.stringify({
                     name,

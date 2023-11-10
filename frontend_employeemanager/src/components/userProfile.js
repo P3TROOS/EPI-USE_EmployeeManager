@@ -12,7 +12,7 @@ const UserProfile = ({ userEmail }) => {
 
     const fetchUsers = () => {
         // Fetch all users from database via api endpoint
-        fetch('http://localhost:8080/api/user/getAll')
+        fetch('http://ec2-51-20-60-63.eu-north-1.compute.amazonaws.com:8080/api/user/getAll')
             .then(response => response.json())
             .then(data => {
                 setUsers(data)
